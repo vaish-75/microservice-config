@@ -1,0 +1,47 @@
+spring:
+  eureka:
+    client:
+      register-with-eureka: true
+      fetch-registry: true
+      service-url:
+        defaultZone: http://localhost:8761/eureka/
+  resilience4j.circuitbreaker:
+  configs:
+    default:
+      registerHealthIndicator: true
+      slidingWindowSize: 10
+      minimumNumberOfCalls: 5
+      permittedNumberOfCallsInHalfOpenState: 3
+      automaticTransitionFromOpenToHalfOpenEnabled: true
+      waitDurationInOpenState: 5s
+      failureRateThreshold: 50
+      eventConsumerBufferSize: 10
+  application:
+    name: Microservice-3-CartService
+management:
+  endpoint:
+    health:
+      show-details: always
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health
+  datasource:
+    url: jdbc:mysql://localhost:3306/micro
+    username: micro
+    password: Mallika@2004
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  
+
+# Fallback configuration in case config server is not available
+server:
+  port: 8083
+
+spring.config.import: "optional:configserver:http://localhost:8888"
